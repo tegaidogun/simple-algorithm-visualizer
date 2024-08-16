@@ -1,0 +1,6 @@
+# Remove Visual Studio Code Folder
+.vscode/
+
+# Remove some files
+*.txt
+*.sh
