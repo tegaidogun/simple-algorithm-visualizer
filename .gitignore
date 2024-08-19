@@ -55,8 +55,9 @@ dkms.conf
 obj/
 bin/
 
-# Remove Visual Studio Code Folder
+# Remove Code Editor Folders
 .vscode/
+.idea/
 
 # Remove some files
 *.txt
