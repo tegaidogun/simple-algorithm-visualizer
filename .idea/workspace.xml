@@ -19,15 +19,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="20280972-194c-46f1-b802-ce52f95507db" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitmodules" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/editor.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/OLDMakefile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/imgui" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/user_manual.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/imgui" beforeDir="false" afterPath="$PROJECT_DIR$/imgui" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/imgui/examples/example_glfw_opengl2/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/imgui/examples/example_glfw_opengl2/Makefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/imgui/examples/example_glfw_opengl3/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/imgui/examples/example_glfw_opengl3/Makefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/imgui/examples/example_glfw_opengl3/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/imgui/examples/example_glfw_opengl3/main.cpp" afterDir="false" />
@@ -42,25 +34,6 @@
       <change beforePath="$PROJECT_DIR$/imgui/examples/example_sdl3_opengl3/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/imgui/examples/example_sdl3_opengl3/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/imgui/examples/example_sdl3_sdlrenderer3/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/imgui/examples/example_sdl3_sdlrenderer3/Makefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/imgui/examples/example_sdl3_sdlrenderer3/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/imgui/examples/example_sdl3_sdlrenderer3/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/algorithms/bubble_sort.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/algorithms/merge_sort.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/algorithms/quick_sort.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/data_structures/dynamic_array.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/utils/array_utils.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/utils/timer.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/visualization/graphics.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/visualization/visualizer.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/algorithms/bubble_sort.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/algorithms/merge_sort.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/algorithms/quick_sort.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data_structures/dynamic_array.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/array_utils.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/timer.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/visualization/graphics.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/visualization/visualizer.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_main.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_sorts.c" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -170,7 +143,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1724061410173</updated>
-      <workItem from="1724061412370" duration="9611000" />
+      <workItem from="1724061412370" duration="9725000" />
     </task>
     <servers />
   </component>
