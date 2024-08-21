@@ -10,48 +10,61 @@ static void glfw_error_callback(int error, const char* description) {
 }
 
 int main(int, char**) {
+    // Set up error callback
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())
         return 1;
 
+    // Set up OpenGL context and version
     const char* glsl_version = "#version 130";
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
+    // Create the window
     GLFWwindow* window = glfwCreateWindow(1280, 720, "Algorithm Visualizer", nullptr, nullptr);
     if (window == nullptr)
         return 1;
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1);
 
+    // Set up Dear ImGui context
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     ImGui::StyleColorsDark();
 
+    // Initialize ImGui for GLFW and OpenGL
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
 
+    // Create an instance of GuiManager
     GuiManager guiManager;
 
+    // Main loop
     while (!glfwWindowShouldClose(window)) {
+        // Poll and handle events
         glfwPollEvents();
+
+        // Start the ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
+        // Render the GUI
         guiManager.render();
 
+        // Rendering
         ImGui::Render();
         int display_w, display_h;
         glfwGetFramebufferSize(window, &display_w, &display_h);
         glViewport(0, 0, display_w, display_h);
-        glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
+        // Swap buffers
         glfwSwapBuffers(window);
     }
 
+    // Clean up
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();

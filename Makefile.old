@@ -3,7 +3,7 @@ CXX = g++
 CXXFLAGS = -std=c++11 -g -Wall -Wformat -Iinclude -Iimgui -Iimgui/backends
 
 # Libraries
-LDFLAGS = -lGL -lGLU -lGLEW -lglfw -ldl
+LDFLAGS = -lopengl32 -lglu32 -lglew32 -lglfw3
 IMGUI_DIR = imgui
 
 # Source files

@@ -39,7 +39,7 @@ bool MergeSort::step() {
         left = 0;   // Reset left to start merging from the beginning
     }
 
-    return false; // Sorting is still in progress
+    return right >= data.size(); // Sorting is complete when all segments are merged
 }
 
 void MergeSort::merge(size_t low, size_t mid, size_t high) {

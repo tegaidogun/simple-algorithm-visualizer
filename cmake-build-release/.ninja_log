@@ -1,0 +1,25 @@
+# ninja log v6
+7	606	7459453352101347	CMakeFiles/algorithm_visualizer.dir/src/gui_manager.cpp.obj	2a057d1d10fb3946
+34	1094	7459329800067749	CMakeFiles/algorithm_visualizer.dir/src/quick_sort.cpp.obj	e5b450bd4424e024
+14	546	7459440359143789	CMakeFiles/algorithm_visualizer.dir/main.cpp.obj	cf367e8b55bc4ed2
+18	220	7459439325305112	CMakeFiles/algorithm_visualizer.dir/src/bubble_sort.cpp.obj	a9f52eb9d40b197
+809	2585	7459329807814070	CMakeFiles/algorithm_visualizer.dir/imgui/backends/imgui_impl_opengl3.cpp.obj	9de87ce5aa590eb0
+24	809	7459329799972453	CMakeFiles/algorithm_visualizer.dir/src/merge_sort.cpp.obj	9b886dc7dad987cf
+760	3025	7459329807326221	CMakeFiles/algorithm_visualizer.dir/imgui/backends/imgui_impl_glfw.cpp.obj	1de55aaf1503cf42
+71	4876	7459329800434133	CMakeFiles/algorithm_visualizer.dir/imgui/imgui_tables.cpp.obj	ee04a7deb9befa6d
+53	7412	7459329800253416	CMakeFiles/algorithm_visualizer.dir/imgui/imgui_demo.cpp.obj	2b8eea0eb7f08492
+61	7782	7459329800333766	CMakeFiles/algorithm_visualizer.dir/imgui/imgui_draw.cpp.obj	8f3ace5901a68312
+82	10131	7459329800544472	CMakeFiles/algorithm_visualizer.dir/imgui/imgui_widgets.cpp.obj	b70806e12f70a62
+43	13781	7459329800163053	CMakeFiles/algorithm_visualizer.dir/imgui/imgui.cpp.obj	c1241d6e0e865dcd
+41	473	7459349043861323	CMakeFiles/algorithm_visualizer.dir/src/heap_sort.cpp.obj	bef25d541a1da03e
+607	840	7459453358101846	bin/win/algorithm_visualizer.exe	567ff4a6ea26970e
+27	384	7459349043728651	CMakeFiles/algorithm_visualizer.dir/src/insertion_sort.cpp.obj	93c2c6b427d6d233
+33	449	7459349043789407	CMakeFiles/algorithm_visualizer.dir/src/selection_sort.cpp.obj	a917df627962767a
+50	476	7459349043947307	CMakeFiles/algorithm_visualizer.dir/src/shell_sort.cpp.obj	cba55be9030d2cd3
+66	643	7459349044119332	CMakeFiles/algorithm_visualizer.dir/src/radix_sort.cpp.obj	81e4fe1fb4ccb820
+20	172	7459455182061389	CMakeFiles/algorithm_visualizer.dir/src/sorting_stopwatch.cpp.obj	7bb2aaace4c3def2
+17	281	7459456428920466	CMakeFiles/algorithm_visualizer.dir/src/bubble_sort.cpp.obj	a9f52eb9d40b197
+6	435	7459456428818218	CMakeFiles/algorithm_visualizer.dir/main.cpp.obj	cf367e8b55bc4ed2
+12	556	7459456428869941	CMakeFiles/algorithm_visualizer.dir/src/gui_manager.cpp.obj	2a057d1d10fb3946
+7	576	7459460985098189	CMakeFiles/algorithm_visualizer.dir/src/gui_manager.cpp.obj	2a057d1d10fb3946
+576	802	7459460990797686	bin/win/algorithm_visualizer.exe	e296434826b95762

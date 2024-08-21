@@ -2,8 +2,16 @@
 #include <cstdio>
 #include <cstdlib>
 #include <ctime>
+#include <thread>
 
-GuiManager::GuiManager() : bar_color(ImVec4(1.0f, 0.0f, 0.0f, 1.0f)), background_color(ImVec4(0.0f, 0.0f, 0.0f, 1.0f)), sorting_in_progress(false) {
+GuiManager::GuiManager()
+    : bar_color(ImVec4(1.0f, 0.0f, 0.0f, 1.0f)),
+      background_color(ImVec4(0.0f, 0.0f, 0.0f, 1.0f)),
+      sorting_in_progress(false),
+      delay(5.0f),       // Default delay set to 5ms
+      comparisons(0),    // Initialize comparisons
+      array_accesses(0)  // Initialize array accesses
+{
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
     generate_random_bars(25);
 }
@@ -19,8 +27,10 @@ void GuiManager::generate_random_bars(int count) {
     }
     sorting_in_progress = false;
     bubble_sort.reset();
-    merge_sort.reset();
-    quick_sort.reset();
+    // Reset statistics
+    delay = 5.0f;
+    comparisons = 0;
+    array_accesses = 0;
 }
 
 void GuiManager::set_sorting_finished() {
@@ -28,17 +38,10 @@ void GuiManager::set_sorting_finished() {
 }
 
 void GuiManager::start_bubble_sort() {
-    bubble_sort = std::unique_ptr<BubbleSort>(new BubbleSort(bar_heights));
-    sorting_in_progress = true;
-}
-
-void GuiManager::start_merge_sort() {
-    merge_sort = std::unique_ptr<MergeSort>(new MergeSort(bar_heights));
-    sorting_in_progress = true;
-}
-
-void GuiManager::start_quick_sort() {
-    quick_sort = std::unique_ptr<QuickSort>(new QuickSort(bar_heights));
+    comparisons = 0;
+    array_accesses = 0;
+    stopwatch.reset(new SortingStopwatch());  // Initialize stopwatch
+    bubble_sort.reset(new BubbleSort(bar_heights, comparisons, array_accesses, *stopwatch)); // Pass stopwatch
     sorting_in_progress = true;
 }
 
@@ -57,7 +60,7 @@ void GuiManager::render_menu() {
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Configurations")) {
-            // Add configuration options here in the future
+            ImGui::SliderFloat("Set Delay (ms)", &delay, 0.0f, 1000.0f, "%.2f ms");
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("About")) {
@@ -72,12 +75,6 @@ void GuiManager::render_sort_menu() {
     ImGui::BeginDisabled(sorting_in_progress);
     if (ImGui::MenuItem("Bubble Sort")) {
         start_bubble_sort();
-    }
-    if (ImGui::MenuItem("Merge Sort")) {
-        start_merge_sort();
-    }
-    if (ImGui::MenuItem("Quick Sort")) {
-        start_quick_sort();
     }
     ImGui::EndDisabled();
 }
@@ -95,8 +92,11 @@ void GuiManager::render_randomize_menu() {
     if (ImGui::MenuItem("Generate 100 Random Values")) {
         generate_random_bars(100);
     }
+    if (ImGui::MenuItem("Generate 1000 Random Values")) {
+        generate_random_bars(1000);
+    }
     if (ImGui::MenuItem("Generate a Random Amount of Random Values")) {
-        int random_count = 10 + (std::rand() % 91);  // Random value between 10 and 100
+        int random_count = 10 + (std::rand() % 991);  // Random value between 10 and 1000
         generate_random_bars(random_count);
     }
 }
@@ -112,74 +112,73 @@ void GuiManager::render_about() {
 }
 
 void GuiManager::render_visualizer() {
-    // Get the current window size
     ImVec2 window_size = ImGui::GetIO().DisplaySize;
+    float padding = 20.0f;
+    float menu_bar_height = ImGui::GetFrameHeight();
+    float visualizer_width = window_size.x * 0.7f - 2 * padding;
+    float visualizer_height = window_size.y - menu_bar_height - 2 * padding;
 
-    // Calculate the size and position of the bar visualizer window with padding
-    float padding = 20.0f;  // Padding from the edges of the viewport
-    float visualizer_width = window_size.x * 0.9f;
-    float visualizer_height = window_size.y * 0.9f;
-    float visualizer_x = (window_size.x - visualizer_width) / 2.0f;
-    float visualizer_y = (window_size.y - visualizer_height) / 2.0f;
-
-    // Set the next window position and size
-    ImGui::SetNextWindowPos(ImVec2(visualizer_x, visualizer_y), ImGuiCond_Always);
+    ImGui::SetNextWindowPos(ImVec2(padding, menu_bar_height + padding), ImGuiCond_Always);
     ImGui::SetNextWindowSize(ImVec2(visualizer_width, visualizer_height), ImGuiCond_Always);
 
-    // Render the bar visualizer window
-    ImGui::Begin("Bar Visualizer", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+    ImGui::Begin("Bar Visualizer", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar);
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
     ImVec2 p = ImGui::GetCursorScreenPos();
 
-    // Set background color
-    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImGui::ColorConvertFloat4ToU32(background_color));
-
-    // Calculate the available drawing area considering padding
-    float available_width = visualizer_width - 2 * padding;
+    float available_width = visualizer_width;
     float available_height = visualizer_height - 2 * padding;
-
-    // Calculate the width of each bar and spacing between them
-    float bar_width = (available_width - (bar_heights.size() - 1) * 5.0f) / bar_heights.size();
+    float bar_width = (available_width - 2 * padding - (bar_heights.size() - 1) * 5.0f) / bar_heights.size();
     float spacing = 5.0f;
 
-    // Draw the horizontal bar at the bottom
-    float horizontal_bar_y = p.y + padding + available_height - 15.0f;  // 10px height for the bar
-    draw_list->AddRectFilled(ImVec2(p.x + padding, horizontal_bar_y), ImVec2(p.x + padding + available_width, horizontal_bar_y + 10.0f), IM_COL32(255, 255, 255, 255));
+    float horizontal_bar_y = p.y + available_height - 15.0f;
+    draw_list->AddRectFilled(ImVec2(p.x - 10.0f, horizontal_bar_y), ImVec2(p.x + available_width, horizontal_bar_y + 15.0f),
+                             IM_COL32(255, 255, 255, 255));
 
-    // Convert ImVec4 color to ImU32 for drawing
     ImU32 bar_color_u32 = ImGui::ColorConvertFloat4ToU32(bar_color);
-
-    // Draw each vertical bar, doubled in height
     for (size_t i = 0; i < bar_heights.size(); ++i) {
-        float x = p.x + padding + i * (bar_width + spacing);
-        float y = horizontal_bar_y - bar_heights[i] * 2;  // Double the height
+        float x = p.x - 10.0f + padding + i * (bar_width + spacing);
+        float y = horizontal_bar_y - bar_heights[i] * 2;
         draw_list->AddRectFilled(ImVec2(x, y), ImVec2(x + bar_width, horizontal_bar_y), bar_color_u32);
     }
 
-    ImGui::PopStyleColor();
+    ImGui::End();
+}
+
+void GuiManager::render_statistics() {
+    ImVec2 window_size = ImGui::GetIO().DisplaySize;
+    float padding = 20.0f;
+    float menu_bar_height = ImGui::GetFrameHeight();
+    float dialog_width = window_size.x * 0.3f - 2 * padding;
+    float dialog_height = window_size.y - menu_bar_height - 2 * padding;
+
+    ImGui::SetNextWindowPos(ImVec2(window_size.x * 0.7f + padding, menu_bar_height + padding), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(dialog_width, dialog_height), ImGuiCond_Always);
+
+    ImGui::Begin("Statistics", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar);
+
+    ImGui::Text("Delay: %.4f ms", delay);
+    ImGui::Text("Comparisons: %d", comparisons);
+    ImGui::Text("Array Accesses: %d", array_accesses);
+    ImGui::Text("Total Time Taken: %.2f s", total_time);
+
     ImGui::End();
 }
 
 void GuiManager::render() {
     render_menu();
 
-    // Perform a step of the active sort if sorting is in progress
     if (sorting_in_progress) {
         if (bubble_sort) {
             sorting_in_progress = !bubble_sort->step();
-        } else if (merge_sort) {
-            sorting_in_progress = !merge_sort->step();
-        } else if (quick_sort) {
-            sorting_in_progress = !quick_sort->step();
         }
 
-        // If sorting is finished, clean up the sort object
+        std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(delay)));
+
         if (!sorting_in_progress) {
             bubble_sort.reset();
-            merge_sort.reset();
-            quick_sort.reset();
         }
     }
 
     render_visualizer();
+    render_statistics();
 }

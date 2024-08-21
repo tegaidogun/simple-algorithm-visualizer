@@ -1,0 +1,96 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Release-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4
+					]
+				}
+			],
+			"name" : "Release",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "algorithm_visualizer",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "algorithm_visualizer::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-algorithm_visualizer-Release-65206c5b5ed4b8115763.json",
+					"name" : "algorithm_visualizer",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "build_all::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-build_all-Release-9cc0c4226379f60a27e2.json",
+					"name" : "build_all",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "build_and_run::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-build_and_run-Release-66d25708f6749120054d.json",
+					"name" : "build_and_run",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "build_only::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-build_only-Release-11e75ef6ac8c8f5373ff.json",
+					"name" : "build_only",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "clean_up::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-clean_up-Release-47659589fbacec2ba012.json",
+					"name" : "clean_up",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/tegaidogun/Documents/DevLibrary/Projects/simple-algorithm-visualizer/cmake-build-release",
+		"source" : "C:/Users/tegaidogun/Documents/DevLibrary/Projects/simple-algorithm-visualizer"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}
