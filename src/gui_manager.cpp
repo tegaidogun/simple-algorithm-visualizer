@@ -4,12 +4,13 @@
 #include <ctime>
 #include <chrono>
 #include <thread>
-#include <iostream> // For std::cerr
+#include <iostream>
 
 GuiManager::GuiManager()
     : bar_color(ImVec4(1.0f, 0.0f, 0.0f, 1.0f)),
       background_color(ImVec4(0.0f, 0.0f, 0.0f, 1.0f)),
       sorting_in_progress(false),
+      sorting_paused(false),
       delay(0.5f),
       comparisons(0),
       array_accesses(0),
@@ -21,17 +22,21 @@ GuiManager::GuiManager()
 }
 
 GuiManager::~GuiManager() {
-    stop_sorting_thread(); // Safely stop any running sorting thread
+    stop_sorting_thread();
 }
 
 void GuiManager::generate_random_bars(int count) {
     stop_sorting_thread();
 
     bar_heights.clear();
+    original_bar_heights.clear();
     for (int i = 0; i < count; ++i) {
-        bar_heights.push_back(static_cast<float>(std::rand() % 100) / 100.0f * 200.0f);
+        float height = static_cast<float>(std::rand() % 100) / 100.0f * 200.0f;
+        bar_heights.push_back(height);
+        original_bar_heights.push_back(height);
     }
     sorting_in_progress = false;
+    sorting_paused = false;
     bubble_sort.reset();
     comparisons = 0;
     array_accesses = 0;
@@ -42,8 +47,11 @@ void GuiManager::generate_random_bars(int count) {
 void GuiManager::set_sorting_finished() {
     sorting_in_progress = false;
     running = false;
-    auto end_time = std::chrono::high_resolution_clock::now();
-    total_time = std::chrono::duration<float>(end_time - start_time).count();
+
+    if (!sorting_paused) {
+        auto end_time = std::chrono::high_resolution_clock::now();
+        total_time += std::chrono::duration<float>(end_time - start_time).count();
+    }
 }
 
 void GuiManager::start_bubble_sort() {
@@ -56,26 +64,69 @@ void GuiManager::start_bubble_sort() {
 
     bubble_sort.reset(new BubbleSort(bar_heights, comparisons, array_accesses, delay));
     sorting_in_progress = true;
+    sorting_paused = false;
 
     sorting_thread = std::thread([this]() {
-        try {
-            while (sorting_in_progress && !bubble_sort->step()) {
-                // Keep sorting until finished
+        while (sorting_in_progress && !bubble_sort->step()) {
+            // Pause handling
+            {
+                std::unique_lock<std::mutex> lock(pause_mutex);
+                pause_cv.wait(lock, [this]() { return !sorting_paused; });
             }
+            // Continue sorting after pause is lifted
+        }
+        if (sorting_in_progress) {
             set_sorting_finished();
-        } catch (const std::exception& e) {
-            std::cerr << "Exception in sorting thread: " << e.what() << std::endl;
-        } catch (...) {
-            std::cerr << "Unknown exception in sorting thread!" << std::endl;
         }
     });
 }
 
 void GuiManager::stop_sorting_thread() {
-    sorting_in_progress = false;  // Signal the thread to stop
+    sorting_in_progress = false;
+    {
+        std::lock_guard<std::mutex> lock(pause_mutex);
+        sorting_paused = false;
+    }
+    pause_cv.notify_all();
     if (sorting_thread.joinable()) {
         sorting_thread.join();  // Wait for the thread to finish
     }
+}
+
+void GuiManager::pause_sorting() {
+    {
+        std::lock_guard<std::mutex> lock(pause_mutex);
+        sorting_paused = true;
+
+        // Capture the time at which the pause starts
+        pause_start_time = std::chrono::high_resolution_clock::now();
+
+        // Accumulate the time that has passed until now
+        total_time += std::chrono::duration<float>(pause_start_time - start_time).count();
+    }
+}
+
+void GuiManager::resume_sorting() {
+    {
+        std::lock_guard<std::mutex> lock(pause_mutex);
+        sorting_paused = false;
+
+        // Update the start_time to "ignore" the pause duration
+        start_time = std::chrono::high_resolution_clock::now();
+    }
+    pause_cv.notify_all();
+}
+
+void GuiManager::reset_sorting() {
+    resume_sorting();  // Ensure sorting is resumed before resetting
+    stop_sorting_thread();
+    bar_heights = original_bar_heights;  // Restore the original data set
+    sorting_in_progress = false;
+    sorting_paused = false;
+    comparisons = 0;
+    array_accesses = 0;
+    total_time = 0.0f;
+    running = false;
 }
 
 void GuiManager::render_menu() {
@@ -98,6 +149,10 @@ void GuiManager::render_menu() {
             ImGui::EndDisabled();
             ImGui::EndMenu();
         }
+        if (ImGui::BeginMenu("Controls")) {
+            render_controls_menu();
+            ImGui::EndMenu();
+        }
         if (ImGui::BeginMenu("About")) {
             render_about();
             ImGui::EndMenu();
@@ -107,9 +162,29 @@ void GuiManager::render_menu() {
 }
 
 void GuiManager::render_sort_menu() {
-    ImGui::BeginDisabled(sorting_in_progress);
+    ImGui::BeginDisabled(sorting_in_progress || sorting_paused);
     if (ImGui::MenuItem("Bubble Sort")) {
         start_bubble_sort();
+    }
+    ImGui::EndDisabled();
+}
+
+void GuiManager::render_controls_menu() {
+    ImGui::BeginDisabled(!sorting_in_progress || sorting_paused);  // Disable pause if not sorting or already paused
+    if (ImGui::MenuItem("Pause")) {
+        pause_sorting();
+    }
+    ImGui::EndDisabled();
+
+    ImGui::BeginDisabled(!sorting_paused);  // Disable resume if not paused
+    if (ImGui::MenuItem("Resume")) {
+        resume_sorting();
+    }
+    ImGui::EndDisabled();
+
+    ImGui::BeginDisabled(!sorting_in_progress);  // Disable reset if not sorting
+    if (ImGui::MenuItem("Reset")) {
+        reset_sorting();
     }
     ImGui::EndDisabled();
 }
@@ -156,8 +231,12 @@ void GuiManager::render_visualizer() {
     ImGui::SetNextWindowSize(ImVec2(visualizer_width, visualizer_height), ImGuiCond_Always);
 
     ImGui::Begin("Bar Visualizer", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar);
+
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
     ImVec2 p = ImGui::GetCursorScreenPos();
+
+    // Set background color
+    draw_list->AddRectFilled(ImVec2(p.x - 10.0f, p.y - 10.0f), ImVec2(p.x + visualizer_width + 10.0f, p.y + visualizer_height + 10.0f), ImGui::ColorConvertFloat4ToU32(background_color));
 
     float available_width = visualizer_width;
     float available_height = visualizer_height - 2 * padding;
@@ -192,7 +271,7 @@ void GuiManager::render_statistics() {
     ImGui::Text("Delay: %.4f ms", delay);
     ImGui::Text("Comparisons: %d", comparisons);
     ImGui::Text("Array Accesses: %d", array_accesses);
-    ImGui::Text("Total Time Taken: %.6f s", running ? std::chrono::duration<float>(std::chrono::high_resolution_clock::now() - start_time).count() : total_time);
+    ImGui::Text("Total Time Taken: %.6f s", total_time);
 
     ImGui::End();
 }
@@ -200,8 +279,10 @@ void GuiManager::render_statistics() {
 void GuiManager::render() {
     render_menu();
 
-    if (sorting_in_progress) {
-        total_time = std::chrono::duration<float>(std::chrono::high_resolution_clock::now() - start_time).count();
+    if (sorting_in_progress && !sorting_paused) {
+        auto current_time = std::chrono::high_resolution_clock::now();
+        total_time += std::chrono::duration<float>(current_time - start_time).count();
+        start_time = current_time;  // Update start_time for the next frame
     }
 
     render_visualizer();

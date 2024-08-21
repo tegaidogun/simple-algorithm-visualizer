@@ -1,8 +1,6 @@
 #include "bubble_sort.hpp"
 #include <algorithm>
 #include <chrono>
-#include <iostream>
-#include <ostream>
 #include <thread>
 
 BubbleSort::BubbleSort(std::vector<float>& data, int& comparisons, int& array_accesses, float delay)

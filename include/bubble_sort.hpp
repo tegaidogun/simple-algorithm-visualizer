@@ -7,7 +7,7 @@
 class BubbleSort {
 public:
     BubbleSort(std::vector<float>& data, int& comparisons, int& array_accesses, float delay);
-    ~BubbleSort();  // Declare the destructor
+    ~BubbleSort();  // Destructor
     bool step();  // Performs one step of bubble sort, returns true if sorting is done
 
 private:
