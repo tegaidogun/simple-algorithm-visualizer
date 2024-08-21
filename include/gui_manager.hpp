@@ -3,15 +3,11 @@
 
 #include "imgui.h"
 #include "bubble_sort.hpp"
-#include "merge_sort.hpp"
-#include "quick_sort.hpp"
-#include "insertion_sort.hpp"
-#include "selection_sort.hpp"
-#include "heap_sort.hpp"
-#include "shell_sort.hpp"
-#include "radix_sort.hpp"
 #include <vector>
 #include <memory>
+#include <chrono>
+#include <thread>
+#include <atomic>
 
 class GuiManager {
 public:
@@ -25,30 +21,21 @@ private:
     std::vector<float> bar_heights;
     ImVec4 bar_color;
     ImVec4 background_color;
-    bool sorting_in_progress;
+    std::atomic<bool> sorting_in_progress;  // Use atomic for thread safety
 
     float delay;           // Delay in milliseconds
     int comparisons;       // Number of comparisons
     int array_accesses;    // Number of array accesses
-    float total_time;      // Total time taken in seconds
+    float total_time;      // Total time taken
 
+    std::chrono::time_point<std::chrono::high_resolution_clock> start_time; // Start time of sorting
+    bool running;          // Is the stopwatch running
 
-    // Sorting-related member variables
     std::unique_ptr<BubbleSort> bubble_sort;
-
-    // Stopwatch for time measurement
-    std::unique_ptr<SortingStopwatch> stopwatch;
-
+    std::thread sorting_thread;  // Sorting thread
+    std::atomic<bool> sorting_thread_active;  // To track if the sorting thread is active
 
     void start_bubble_sort();
-    /*void start_merge_sort();
-    void start_quick_sort();
-    void start_insertion_sort();
-    void start_selection_sort();
-    void start_heap_sort();
-    void start_shell_sort();
-    void start_radix_sort();*/
-
     void render_menu();
     void render_sort_menu();
     void render_randomize_menu();
@@ -57,8 +44,7 @@ private:
     void render_visualizer();
     void render_statistics();
 
-    // Helper functions to update statistics
-    void update_statistics();
+    void stop_sorting_thread();
 };
 
 #endif // GUI_MANAGER_HPP

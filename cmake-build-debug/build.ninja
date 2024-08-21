@@ -168,13 +168,6 @@ build CMakeFiles/algorithm_visualizer.dir/imgui/backends/imgui_impl_opengl3.cpp.
   OBJECT_DIR = CMakeFiles\algorithm_visualizer.dir
   OBJECT_FILE_DIR = CMakeFiles\algorithm_visualizer.dir\imgui\backends
 
-build CMakeFiles/algorithm_visualizer.dir/src/sorting_stopwatch.cpp.obj: CXX_COMPILER__algorithm_visualizer_unscanned_Debug C$:/Users/tegaidogun/Documents/DevLibrary/Projects/simple-algorithm-visualizer/src/sorting_stopwatch.cpp || cmake_object_order_depends_target_algorithm_visualizer
-  DEP_FILE = CMakeFiles\algorithm_visualizer.dir\src\sorting_stopwatch.cpp.obj.d
-  FLAGS = -g -Wall -Wformat -g -std=gnu++11 -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/tegaidogun/Documents/DevLibrary/Projects/simple-algorithm-visualizer/include -IC:/Users/tegaidogun/Documents/DevLibrary/Projects/simple-algorithm-visualizer/imgui -IC:/Users/tegaidogun/Documents/DevLibrary/Projects/simple-algorithm-visualizer/imgui/backends
-  OBJECT_DIR = CMakeFiles\algorithm_visualizer.dir
-  OBJECT_FILE_DIR = CMakeFiles\algorithm_visualizer.dir\src
-
 
 # =============================================================================
 # Link build statements for EXECUTABLE target algorithm_visualizer
@@ -183,7 +176,7 @@ build CMakeFiles/algorithm_visualizer.dir/src/sorting_stopwatch.cpp.obj: CXX_COM
 #############################################
 # Link the executable bin\win\algorithm_visualizer.exe
 
-build bin/win/algorithm_visualizer.exe: CXX_EXECUTABLE_LINKER__algorithm_visualizer_Debug CMakeFiles/algorithm_visualizer.dir/main.cpp.obj CMakeFiles/algorithm_visualizer.dir/src/gui_manager.cpp.obj CMakeFiles/algorithm_visualizer.dir/src/bubble_sort.cpp.obj CMakeFiles/algorithm_visualizer.dir/src/merge_sort.cpp.obj CMakeFiles/algorithm_visualizer.dir/src/quick_sort.cpp.obj CMakeFiles/algorithm_visualizer.dir/src/insertion_sort.cpp.obj CMakeFiles/algorithm_visualizer.dir/src/selection_sort.cpp.obj CMakeFiles/algorithm_visualizer.dir/src/heap_sort.cpp.obj CMakeFiles/algorithm_visualizer.dir/src/shell_sort.cpp.obj CMakeFiles/algorithm_visualizer.dir/src/radix_sort.cpp.obj CMakeFiles/algorithm_visualizer.dir/imgui/imgui.cpp.obj CMakeFiles/algorithm_visualizer.dir/imgui/imgui_demo.cpp.obj CMakeFiles/algorithm_visualizer.dir/imgui/imgui_draw.cpp.obj CMakeFiles/algorithm_visualizer.dir/imgui/imgui_tables.cpp.obj CMakeFiles/algorithm_visualizer.dir/imgui/imgui_widgets.cpp.obj CMakeFiles/algorithm_visualizer.dir/imgui/backends/imgui_impl_glfw.cpp.obj CMakeFiles/algorithm_visualizer.dir/imgui/backends/imgui_impl_opengl3.cpp.obj CMakeFiles/algorithm_visualizer.dir/src/sorting_stopwatch.cpp.obj
+build bin/win/algorithm_visualizer.exe: CXX_EXECUTABLE_LINKER__algorithm_visualizer_Debug CMakeFiles/algorithm_visualizer.dir/main.cpp.obj CMakeFiles/algorithm_visualizer.dir/src/gui_manager.cpp.obj CMakeFiles/algorithm_visualizer.dir/src/bubble_sort.cpp.obj CMakeFiles/algorithm_visualizer.dir/src/merge_sort.cpp.obj CMakeFiles/algorithm_visualizer.dir/src/quick_sort.cpp.obj CMakeFiles/algorithm_visualizer.dir/src/insertion_sort.cpp.obj CMakeFiles/algorithm_visualizer.dir/src/selection_sort.cpp.obj CMakeFiles/algorithm_visualizer.dir/src/heap_sort.cpp.obj CMakeFiles/algorithm_visualizer.dir/src/shell_sort.cpp.obj CMakeFiles/algorithm_visualizer.dir/src/radix_sort.cpp.obj CMakeFiles/algorithm_visualizer.dir/imgui/imgui.cpp.obj CMakeFiles/algorithm_visualizer.dir/imgui/imgui_demo.cpp.obj CMakeFiles/algorithm_visualizer.dir/imgui/imgui_draw.cpp.obj CMakeFiles/algorithm_visualizer.dir/imgui/imgui_tables.cpp.obj CMakeFiles/algorithm_visualizer.dir/imgui/imgui_widgets.cpp.obj CMakeFiles/algorithm_visualizer.dir/imgui/backends/imgui_impl_glfw.cpp.obj CMakeFiles/algorithm_visualizer.dir/imgui/backends/imgui_impl_opengl3.cpp.obj
   FLAGS = -g -Wall -Wformat -g
   LINK_LIBRARIES = -lopengl32  -lglu32  -lglew32  -lglfw3  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\algorithm_visualizer.dir

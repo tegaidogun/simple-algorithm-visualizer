@@ -1,10 +1,12 @@
 #include "merge_sort.hpp"
+#include <algorithm> // For std::min
+#include <chrono>    // For std::chrono::duration
 
-MergeSort::MergeSort(std::vector<float>& data)
-    : data(data), aux(data.size()), left(0), right(1), mid(0), merging(false) {}
+MergeSort::MergeSort(std::vector<float>& data, int& comparisons, int& array_accesses, float delay)
+    : data(data), aux(data.size()), left(0), right(1), mid(0), merging(false),
+      comparisons(comparisons), array_accesses(array_accesses), delay(delay) {}
 
 bool MergeSort::step() {
-    // Check if we've completed the sorting process
     if (right >= data.size()) {
         right = 1;
         left = 0;
@@ -12,13 +14,11 @@ bool MergeSort::step() {
         mid = 0;
     }
 
-    // If left is beyond the end of the array, sorting is complete
     if (left >= data.size() - 1) return true;
 
     if (!merging) {
         mid = left + right - 1;
         if (mid >= data.size() - 1) {
-            // No need to merge if we've reached the end
             right *= 2;
             left = 0;
             return false;
@@ -26,32 +26,61 @@ bool MergeSort::step() {
         merging = true;
     }
 
-    // Perform the merge step
     if (merging) {
         merge(left, mid, std::min(left + right * 2 - 1, data.size() - 1));
         merging = false;
         left += right * 2;
     }
 
-    // Move to the next segment if necessary
     if (left >= data.size() - 1) {
-        right *= 2; // Double the segment size for the next level of merging
-        left = 0;   // Reset left to start merging from the beginning
+        right *= 2;
+        left = 0;
     }
 
-    return right >= data.size(); // Sorting is complete when all segments are merged
+    // Busy-wait loop for the delay
+    auto start_time = std::chrono::high_resolution_clock::now();
+    while (std::chrono::duration<float, std::milli>(std::chrono::high_resolution_clock::now() - start_time).count() < delay) {
+        // Busy-wait loop
+    }
+
+    return right >= data.size();
 }
 
 void MergeSort::merge(size_t low, size_t mid, size_t high) {
     size_t i = low, j = mid + 1;
     for (size_t k = low; k <= high; ++k) {
-        if (i > mid) aux[k] = data[j++];
-        else if (j > high) aux[k] = data[i++];
-        else if (data[j] < data[i]) aux[k] = data[j++];
-        else aux[k] = data[i++];
+        if (i > mid) {
+            aux[k] = data[j++];
+            array_accesses += 2;  // 1 read from data[j] and 1 write to aux[k]
+        } else if (j > high) {
+            aux[k] = data[i++];
+            array_accesses += 2;  // 1 read from data[i] and 1 write to aux[k]
+        } else {
+            comparisons++;  // Comparison between data[j] and data[i]
+            if (data[j] < data[i]) {
+                aux[k] = data[j++];
+                array_accesses += 2;  // 1 read from data[j] and 1 write to aux[k]
+            } else {
+                aux[k] = data[i++];
+                array_accesses += 2;  // 1 read from data[i] and 1 write to aux[k]
+            }
+        }
+
+        // Busy-wait loop for the delay
+        auto start_time = std::chrono::high_resolution_clock::now();
+        while (std::chrono::duration<float, std::milli>(std::chrono::high_resolution_clock::now() - start_time).count() < delay) {
+            // Busy-wait loop
+        }
     }
 
     for (size_t k = low; k <= high; ++k) {
         data[k] = aux[k];
+        array_accesses += 2;  // 1 read from aux[k] and 1 write to data[k]
+
+        // Busy-wait loop for the delay
+        auto start_time = std::chrono::high_resolution_clock::now();
+        while (std::chrono::duration<float, std::milli>(std::chrono::high_resolution_clock::now() - start_time).count() < delay) {
+            // Busy-wait loop
+        }
     }
 }

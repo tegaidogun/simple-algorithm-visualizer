@@ -1,13 +1,17 @@
 #include "bubble_sort.hpp"
-#include "sorting_stopwatch.hpp"
 #include <algorithm>
+#include <chrono>
+#include <iostream>
+#include <ostream>
+#include <thread>
 
-BubbleSort::BubbleSort(std::vector<float>& data, int& comparisons, int& array_accesses, SortingStopwatch& stopwatch)
-    : data(data), current_step(0), comparisons(comparisons), array_accesses(array_accesses), stopwatch(stopwatch) {}
+BubbleSort::BubbleSort(std::vector<float>& data, int& comparisons, int& array_accesses, float delay)
+    : data(data), current_step(0), comparisons(comparisons), array_accesses(array_accesses), delay(delay) {}
+
+// Define the destructor
+BubbleSort::~BubbleSort() = default;
 
 bool BubbleSort::step() {
-    stopwatch.start();  // Start the stopwatch
-
     if (current_step < data.size() - 1) {
         for (size_t j = 0; j < data.size() - 1 - current_step; ++j) {
             comparisons++;  // Increment comparisons count
@@ -17,12 +21,11 @@ bool BubbleSort::step() {
             } else {
                 array_accesses += 2; // 2 reads if no swap
             }
+            std::this_thread::sleep_for(std::chrono::duration<float, std::milli>(delay));  // Apply delay
         }
         current_step++;
-        stopwatch.stop();  // Stop the stopwatch
         return false;  // Sorting is not done yet
     } else {
-        stopwatch.stop();  // Stop the stopwatch
         return true;  // Sorting is complete
     }
 }

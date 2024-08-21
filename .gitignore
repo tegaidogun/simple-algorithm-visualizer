@@ -58,6 +58,8 @@ bin/
 # Remove Code Editor Folders
 .vscode/
 .idea/
+cmake-build-debug/
+cmake-build-release/
 
 # Remove some files
 *.txt
